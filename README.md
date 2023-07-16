@@ -1,6 +1,6 @@
 # ARAM Balance Viewer
 
-Simple program that displays the ARAM balance changes for your current champion while in champ select. Data is from the wiki, so it may not always be accurate.
+Simple program that displays the ARAM balance changes for your current champion while in champ select. Data is from the wiki, so it may not always be accurate. Created over a few days, so don't expect it to be perfect
 
 ## To Run
 Download [the zip file](https://github.com/J-P-Walter/ARAM-Balance-Viewer/blob/main/ABV.zip).
