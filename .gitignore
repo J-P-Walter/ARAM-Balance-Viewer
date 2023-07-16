@@ -162,5 +162,4 @@ cython_debug/
 aram_data.txt
 *.json
 *.lua
-*.cfg
 app
