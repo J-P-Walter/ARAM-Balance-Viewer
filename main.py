@@ -94,10 +94,6 @@ async def sessionInfo(connection):
             q.put("Perfectly balanced or missing from wiki lol")
             # print("Perfectly balanced or missing from wiki lol")
 
-
-
-
-
 def driver():
     print("driver thread starting")
     connector.start()
@@ -153,18 +149,12 @@ def gui():
     check_queue()
     window.mainloop()
 
-
-
 threads = list()
 q = Queue()
 
 d = threading.Thread(target=driver)
 threads.append(d)
 d.start()
-
-# g = threading.Thread(target=gui)
-# threads.append(g)
-# g.start()
 
 for idx, thread in enumerate(threads):
     print("joining thread ", idx)
