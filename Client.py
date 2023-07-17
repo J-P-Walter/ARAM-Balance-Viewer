@@ -1,5 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
+
+#Class to basically just gather and hold data so its easier to access
+#for the main program
 class Client:
     summonerId = -1
     summonerIdx = -1
@@ -11,8 +14,10 @@ class Client:
         self.champIds = self.sourceChampIds()
         self.champData = self.sourceChampData()
         
+    #Uses community hosted data on all champs, only interested in the champion ids
+    #TODO maybe get game version and pass in as argument to get most updated data ie. if a champ is added to the game
+
     def sourceChampIds(self):
-        #TODO maybe get game version and pass in as argument to get most updated?
         response = requests.get('http://ddragon.leagueoflegends.com/cdn/13.13.1/data/en_US/champion.json')
         res = response.json()
 
@@ -21,6 +26,8 @@ class Client:
             champIdDict[int(res['data'][champ]['key'])] = champ
         return champIdDict
     
+    #Scrapes the ARAM wiki for champion data, unfortunately it looks like it has a lot of gaps
+    #so maybe look into own database as an alternative
     def sourceChampData(self):
         page = requests.get('https://leagueoflegends.fandom.com/wiki/ARAM')
         soup = BeautifulSoup(page.content, 'html.parser')
