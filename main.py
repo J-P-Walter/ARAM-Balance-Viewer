@@ -26,7 +26,6 @@ async def connect(connection):
     res = json.loads(await player.read())
 
     client.setSummonerId(res['summonerId'])
-    # print(f'Missing data from {len(client.getChampIds())-len(client.getChampData())} champions due to wiki inaccuracies')
     q.put(res['summonerId'])
 
 #Fires during changes of state in the client
@@ -39,16 +38,14 @@ async def aramCheck(connection, event):
 async def champSelect(connection):
     lobby = await connection.request('get', '/lol-gameflow/v1/gameflow-phase')
     if lobby.status != 200:
-        logging.error(lobby)
+        logging.WARNING(lobby)
         return
     res = json.loads(await lobby.read())
-    # print(res)
     global isARAM
     global wasChampSelect
     if res == 'ChampSelect':
         gamemode = await connection.request('get', '/lol-gameflow/v1/session')
         if gamemode.status != 200:
-            # print("Err: /lol-gameflow/v1/session")
             logging.error(gamemode)
             return
         res = json.loads(await gamemode.read())
@@ -84,8 +81,6 @@ async def sessionInfo(connection):
 
     session = await connection.request('get', '/lol-champ-select/v1/session')
     if session.status != 200:
-        # print("Err: /lol-champ-select/v1/session")
-        # print(session.status)
         logging.ERROR(session)
         return
     res = json.loads(await session.read())
@@ -104,11 +99,9 @@ async def sessionInfo(connection):
         champName = client.getChampIds()[client.getCurrentChamp()].lower()
         try:
             data = client.getChampData()[champName]
-            # print(data)
             q.put(data)
         except:
             q.put("Perfectly balanced or missing from wiki lol")
-            # print("Perfectly balanced or missing from wiki lol")
 
 #Start the driver
 def driver():
@@ -147,7 +140,6 @@ def gui():
     def check_queue():
         try:
             res = q.get(0)
-            # print(res)
             if res == "stop":
                 stop_gui()
             if isinstance(res, str):
@@ -161,12 +153,12 @@ def gui():
                 receivedData.config(text=res['damageReceived'])
                 effectsData.config(text=res['otherEffects'])
         except:
-            # print("Queue empty")
             pass
         finally:
             window.after(100, check_queue)
 
     def stop_gui():
+        print("gui thread stopping")
         window.destroy()
         t = threads.pop()
         t.join()
