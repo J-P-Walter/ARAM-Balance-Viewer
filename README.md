@@ -2,6 +2,8 @@
 
 Simple program that displays the ARAM balance changes for your current champion while in champ select. Data is from the wiki, so it may not always be accurate. Created over a few days, so don't expect it to be perfect
 
+![image](https://github.com/J-P-Walter/ARAM-Balance-Viewer/assets/70927525/8ed963cc-bdf1-4574-a9d7-76416785f189)
+
 ## To Run
 
 Download [the zip file](https://github.com/J-P-Walter/ARAM-Balance-Viewer/blob/main/AramBalanceViewer.zip).
