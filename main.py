@@ -19,23 +19,21 @@ connector = Connector()
 @connector.ready
 async def connect(connection):
     print("LCU API is ready to be used.")
-    player = await connection.request('get', '/lol-summoner/v1/current-summoner')
-    if player.status != 200:
-        logging.error(player)
-        return
-    res = json.loads(await player.read())
 
-    client.setSummonerId(res['summonerId'])
-    q.put(res['summonerId'])
+    if client.summonerId == -1:
+        player = await connection.request('get', '/lol-summoner/v1/current-summoner')
+        if player.status != 200:
+            logging.error(player)
+            return
+        res = json.loads(await player.read())
+
+        client.setSummonerId(res['summonerId'])
 
 #Fires during changes of state in the client
 #Ex. None, Lobby, ChampSelect, etc.
 #Only interested in ChampSelect and if the gamemode is ARAM
 @connector.ws.register('/lol-gameflow/v1/gameflow-phase', event_types=('UPDATE',))
 async def aramCheck(connection, event):
-    await champSelect(connection)
-
-async def champSelect(connection):
     lobby = await connection.request('get', '/lol-gameflow/v1/gameflow-phase')
     if lobby.status != 200:
         logging.WARNING(lobby)
@@ -71,9 +69,6 @@ async def champSelect(connection):
 async def characterInfo(connection, event):
     if not isARAM:
         return
-    await sessionInfo(connection)
-
-async def sessionInfo(connection):
     if len(threads) < 2:
         g = threading.Thread(target=gui)
         threads.append(g)
@@ -85,7 +80,7 @@ async def sessionInfo(connection):
         return
     res = json.loads(await session.read())
     team = res['myTeam']
-
+    
     if client.getSummonerIdx() < 0:
         for idx, p in enumerate(team):
             if p['summonerId'] == client.getSummonerId():
@@ -174,6 +169,5 @@ threads.append(d)
 d.start()
 
 for idx, thread in enumerate(threads):
-    print("joining thread ", idx)
     thread.join()
 
